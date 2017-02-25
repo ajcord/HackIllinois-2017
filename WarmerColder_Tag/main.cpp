@@ -1,9 +1,23 @@
 #include "mbed.h"
 #include "ble/BLE.h"
 
-#define BAUD_RATE       115200
+
+#define BAUD_RATE       115200 // baud
+
 #define SCAN_INTERVAL   160 // units of 0.625ms
-#define SCAN_WINDOW     SCAN_INTERVAL
+#define SCAN_WINDOW     320 // units of 0.625ms
+
+#define ADV_INTERVAL    200 // ms
+#define TX_POWER        -4 // dBm
+
+#define TAG_NAME        "WarmerColderTag"
+Gap::Address_t addr = {0x06, 0x05, 0x04, 0x03, 0x02, 0x01};
+
+#define MAGIC_RX_LEN    3
+#define MAGIC_TX_LEN    3
+const uint8_t magic_rx[MAGIC_RX_LEN] = {0xC0, 0xFF, 0xEE}; // COFFEE
+const uint8_t magic_tx[MAGIC_TX_LEN] = {0xBA, 0x6E, 0x15}; // BAGELS
+
 
 PwmOut red_led(p22);
 PwmOut green_led(p21);
@@ -21,17 +35,14 @@ void setLED(float r, float g, float b) {
 
 void ledUpdateCallback(void) {
     // TODO
-    float temp = red_led;
-    red_led = green_led;
-    green_led = blue_led;
-    blue_led = temp;
+    setLED(1, 0, 0);
+    wait(0.1);
+    setLED(0, 0, 0);
 }
 
 void advertisementReceivedCallback(const Gap::AdvertisementCallbackParams_t *params) {
     // Check if the advertisement came from the phone
-    if (params->advertisingData[0] == 0xc0 &&
-        params->advertisingData[1] == 0xff &&
-        params->advertisingData[2] == 0xee) {
+    if (!memcmp(params->advertisingData, &magic_rx, MAGIC_RX_LEN)) {
         printf("%d\n", params->rssi);
     }
 }
@@ -43,12 +54,29 @@ void bleInitCallback(BLE::InitializationCompleteCallbackContext *params) {
         return;
     }
     
+    // Setup scanning
     ble.gap().setScanParams(SCAN_INTERVAL, SCAN_WINDOW);
     ble.gap().startScan(advertisementReceivedCallback);
+    
+    // Setup advertising
+    ble.gap().accumulateAdvertisingPayload(
+        GapAdvertisingData::MANUFACTURER_SPECIFIC_DATA,
+        magic_tx, MAGIC_TX_LEN);
+    ble.gap().accumulateAdvertisingPayload(
+        GapAdvertisingData::BREDR_NOT_SUPPORTED);
+    ble.gap().setAdvertisingType(
+        GapAdvertisingParams::ADV_NON_CONNECTABLE_UNDIRECTED);
+    ble.accumulateAdvertisingPayload(
+        GapAdvertisingData::SHORTENED_LOCAL_NAME,
+        (const uint8_t*)TAG_NAME, sizeof(TAG_NAME));
+    ble.gap().setAddress(Gap::ADDR_TYPE_RANDOM_STATIC, addr);
+    ble.gap().setTxPower(TX_POWER);
+    ble.gap().setAdvertisingInterval(ADV_INTERVAL);
+    ble.gap().startAdvertising();
 }
 
 int main(void) {
-    setLED(0.0, 1.0, 1.0);
+    setLED(0, 0, 0);
     t.attach(ledUpdateCallback, 1);
 
     serial.baud(BAUD_RATE);
@@ -56,6 +84,7 @@ int main(void) {
     
     BLE &ble = BLE::Instance();
     ble.init(bleInitCallback);
+    while (!ble.hasInitialized());
 
     for (;;) {
         ble.waitForEvent();
