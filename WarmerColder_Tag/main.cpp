@@ -42,7 +42,8 @@ void ledUpdateCallback(void) {
 
 void advertisementReceivedCallback(const Gap::AdvertisementCallbackParams_t *params) {
     // Check if the advertisement came from the phone
-    if (!memcmp(params->advertisingData, &magic_rx, MAGIC_RX_LEN)) {
+    if (advertisingDataLen == MAGIC_RX_LEN &&
+        !memcmp(params->advertisingData, &magic_rx, MAGIC_RX_LEN)) {
         printf("%d\n", params->rssi);
     }
 }
