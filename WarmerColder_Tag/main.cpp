@@ -1,5 +1,6 @@
 #include "mbed.h"
 #include "ble/BLE.h"
+#include "color.h"
 
 
 #define BAUD_RATE       115200 // baud
@@ -18,7 +19,7 @@ Gap::Address_t addr = {0x06, 0x05, 0x04, 0x03, 0x02, 0x01};
 const uint8_t magic_rx[MAGIC_RX_LEN] = {0xC0, 0xFF, 0xEE}; // COFFEE
 const uint8_t magic_tx[MAGIC_TX_LEN] = {0xBA, 0x6E, 0x15}; // BAGELS
 
-
+#define RSSI_RED        -40 // dBm
 PwmOut red_led(p22);
 PwmOut green_led(p21);
 PwmOut blue_led(p23);
@@ -27,24 +28,33 @@ Ticker t;
 Serial serial(p9, p11);
 BLE& ble = BLE::Instance(BLE::DEFAULT_INSTANCE);
 
-void setLED(float r, float g, float b) {
+float hue = 0.0; // degrees
+
+
+void setRGB(float r, float g, float b) {
     red_led = 1.0 - r;
     green_led = 1.0 - g;
     blue_led = 1.0 - b;
 }
 
+void setHSV(float h, float s, float v) {
+    float r, g, b;
+    HSVtoRGB(r, g, b, h, s, v);
+    setRGB(r, g, b);
+}
+
 void ledUpdateCallback(void) {
-    // TODO
-    setLED(1, 0, 0);
+    setHSV(hue, 1, 1);
     wait(0.1);
-    setLED(0, 0, 0);
+    setHSV(hue, 1, 0);
 }
 
 void advertisementReceivedCallback(const Gap::AdvertisementCallbackParams_t *params) {
     // Check if the advertisement came from the phone
-    if (advertisingDataLen == MAGIC_RX_LEN &&
+    if (params->advertisingDataLen == MAGIC_RX_LEN &&
         !memcmp(params->advertisingData, &magic_rx, MAGIC_RX_LEN)) {
         printf("%d\n", params->rssi);
+        hue = params->rssi + 360 - RSSI_RED;
     }
 }
 
@@ -77,7 +87,7 @@ void bleInitCallback(BLE::InitializationCompleteCallbackContext *params) {
 }
 
 int main(void) {
-    setLED(0, 0, 0);
+    setRGB(0, 0, 0);
     t.attach(ledUpdateCallback, 1);
 
     serial.baud(BAUD_RATE);
