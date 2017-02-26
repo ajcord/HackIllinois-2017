@@ -28,6 +28,6 @@ See contributors.md, but Daniel actually did no work and chose to spend the enti
 
 ## Licence
 
-I have one of those licences from Disneyland after going on the Indy 500 track.
+I have one of those licences from Disneyland after going on the Indy 500 ride.
 
 But actually, it's GPL version 3.
