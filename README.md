@@ -9,10 +9,14 @@ The chased can start the game after getting a head start. They will have informa
 
 ## Build/Installation 
 For the phone:
-  Install and compile the app and run from AndroidStudio or anther API.
+  Install and compile the app and run from AndroidStudio or another IDE.
   
- For the beacons:
- ----- ALEX -----
+For the beacons:
+  Import the project into the [mbed online IDE](https://developer.mbed.org),
+  set the target as "Seeed Tiny BLE," and compile.
+  Connect the tag to a programmer (such as the nRF51822-DK),
+  and drop the .hex file onto the programmer.
+  Note that the tag must have a battery inserted in order to program it.
  
  ## Documentation
  Go outside, take 55 paces directly west then take 17 paces southwest. Find the tree marked with a small "x" on its root. Take an ax and cut down the tree. Now, sit on the trunk and pull out your phone. Open this github repository and direct yourself to the html directory for documentation.
@@ -22,3 +26,5 @@ For the phone:
  
  ## Licence
  I have one of those licences from Disneyland after going on the Indy 500 track.
+
+ But actually, it's GPL version 3.
