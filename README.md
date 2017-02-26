@@ -12,7 +12,7 @@ For the phone:
   Install and compile the app and run from AndroidStudio or anther API.
   
  For the beacons:
- ----- ALEX -----
+    DO THIS ALEX
  
  ## Documentation
  
