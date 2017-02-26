@@ -19,12 +19,15 @@ For the beacons:
   Note that the tag must have a battery inserted in order to program it.
  
  ## Documentation
- Go outside, take 55 paces directly west then take 17 paces southwest. Find the tree marked with a small "x" on its root. Take an ax and cut down the tree. Now, sit on the trunk and pull out your phone. Open this github repository and direct yourself to the html directory for documentation.
+ 
+ Go outside, take 55 paces directly west then take 17 paces southwest. Find the tree marked with a really small "x" on its root. Like, it is tiny. Take an ax and cut down the tree. Don't forget to yell "Timber"! Now, sit on the trunk and pull out your phone. Open this github repository and direct yourself to the html directory for documentation.
  
  ## Contributor Guide
+ 
  See contributors.md, but Daniel actually did no work and chose to spend the entire Hackathon eating bagels and disrupting Purdue students.
  
  ## Licence
+ 
  I have one of those licences from Disneyland after going on the Indy 500 track.
 
  But actually, it's GPL version 3.
