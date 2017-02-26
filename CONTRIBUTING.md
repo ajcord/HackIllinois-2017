@@ -5,7 +5,7 @@ If you'd like to contribute to our project, please read the following
 information to help you get started.
 
 ## Short Links to Important Resources:
-* docs: handbook / roadmap (you'll learn more about this in the roadmapping session)
+* [docs](https://github.com/ajcord/HackIllinois-2017/blob/master/html/index.html)
 * [bugs](https://github.com/ajcord/HackIllinois-2017/issues)
 * communcations: TODO
 
