@@ -8,8 +8,8 @@
 
 #define UPDATE_INTERVAL 500 // ms
 
-#define SCAN_INTERVAL   160 // units of 0.625ms
-#define SCAN_WINDOW     SCAN_INTERVAL // units of 0.625ms
+#define SCAN_INTERVAL   320 // units of 0.625ms
+#define SCAN_WINDOW     160 // units of 0.625ms
 
 #define ADV_INTERVAL    200 // ms
 #define TX_POWER        -4 // dBm
@@ -99,8 +99,6 @@ void ledUpdateCallback(void) {
     }
     if (total > 0) {
         avg = sum / total;
-    } else {
-        printf("%d, %d, %d\n", recvAdvTailIdx, recvAdvHeadIdx, i);
     }
 #ifdef TINY_BLE
     printf("Avg RSSI: %d\n", avg);
@@ -148,11 +146,11 @@ void bleInitCallback(BLE::InitializationCompleteCallbackContext *params) {
     ble.gap().accumulateAdvertisingPayload(
         GapAdvertisingData::MANUFACTURER_SPECIFIC_DATA,
         magic_tx, MAGIC_TX_LEN);
-    ble.gap().accumulateAdvertisingPayload(
-        GapAdvertisingData::BREDR_NOT_SUPPORTED);
-    ble.gap().accumulateAdvertisingPayload(
-        GapAdvertisingData::SHORTENED_LOCAL_NAME,
-        (const uint8_t*)TAG_NAME, sizeof(TAG_NAME));
+//    ble.gap().accumulateAdvertisingPayload(
+//        GapAdvertisingData::BREDR_NOT_SUPPORTED);
+//    ble.gap().accumulateAdvertisingPayload(
+//        GapAdvertisingData::SHORTENED_LOCAL_NAME,
+//        (const uint8_t*)TAG_NAME, sizeof(TAG_NAME));
     ble.gap().setAddress(Gap::ADDR_TYPE_RANDOM_STATIC, addr);
     ble.gap().setTxPower(TX_POWER);
     ble.gap().setAdvertisingInterval(ADV_INTERVAL);
